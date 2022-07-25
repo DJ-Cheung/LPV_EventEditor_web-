@@ -23,6 +23,13 @@
         <div id="unity-build-title">LPV_EventEditor</div>
       </div>
     </div>
+	<input
+	  type="file"
+	  id="csv-uploader"
+	  data-target="file-uploader"
+	  accept="text/csv"
+	  multiple="multiple"
+	/>
     <script>
       var container = document.querySelector("#unity-container");
       var canvas = document.querySelector("#unity-canvas");
@@ -116,6 +123,16 @@
         });
       };
       document.body.appendChild(script);
+	  
+	  
+	  
+	  //Upload CSV
+	  const fileUploader = document.querySelector('#csv-uploader');
+
+	  fileUploader.addEventListener('change', (csv) => {
+	    var filesJson = JSON.stringify(csv.target.files);
+	    unityInstance.SendMessage('DataManager','UploadCSV',filesJson);
+	  });
     </script>
   </body>
 </html>
