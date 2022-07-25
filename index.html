@@ -133,21 +133,23 @@
 	  fileUploader.addEventListener('change', (csv) => {
 	    console.log(csv.target.files);
 	  
-		var results = csv.target.files;
+		var files = csv.target.files;
 		var destFileArray = [];
-		var len = results.length;
+		var len = files.length;
 		for (var i=0; i<len; i++){
-			var result = results[i];
-			var file = result.file;
-			var o = {"name":result.name, "type":result.type, "size":result.size, "filePath":result.webkitRelativePath};
-			destFileArray.push(o);
+			var file = files[i];
+			
+			var fr = new FileReader();
+			fr.onload = (function(f) {
+				return function(e) {
+					var o = {"name":f.name, "type":f.type, "size":f.size, "content":e.target.result};
+					var json = JSON.stringify(o);
+					unityGame.SendMessage('DataManager','UploadCSV',json);
+				};
+			})(file);
+			
+            fr.readAsText(file);
 		}
-	
-		var object = {"files":destFileArray};
-		var fileUploadDataJSON = JSON.stringify(object);
-		
-		console.log(fileUploadDataJSON);
-		unityGame.SendMessage('DataManager','UploadCSV',fileUploadDataJSON);
 	  });
     </script>
   </body>
