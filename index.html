@@ -130,10 +130,24 @@
       document.body.appendChild(script);
 	  
 	  const fileUploader = document.querySelector('#csv-uploader');
-
 	  fileUploader.addEventListener('change', (csv) => {
-	    var filesJson = JSON.stringify(csv.target.files);
-	    unityGame.SendMessage('DataManager','UploadCSV',filesJson);
+	    console.log(csv.target.files);
+	  
+		var results = csv.target.files;
+		var destFileArray = [];
+		var len = results.length;
+		for (var i=0; i<len; i++){
+			var result = results[i];
+			var file = result.file;
+			var o = {"name":result.name, "type":result.type, "size":result.size, "filePath":result.webkitRelativePath};
+			destFileArray.push(o);
+		}
+	
+		var object = {"files":destFileArray};
+		var fileUploadDataJSON = JSON.stringify(object);
+		
+		console.log(fileUploadDataJSON);
+		unityGame.SendMessage('DataManager','UploadCSV',fileUploadDataJSON);
 	  });
     </script>
   </body>
